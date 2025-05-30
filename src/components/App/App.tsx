@@ -8,6 +8,7 @@ import { type Movie } from "../../types/movie";
 import MovieModal from "../MovieModal/MovieModal";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 export default function App() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
@@ -26,6 +27,13 @@ export default function App() {
   };
 
   const notify = () => toast.error("No movies found for your request.");
+
+  const { data, isError, isLoading, isSuccess } = useQuery({
+    queryKey: ["movies", query],
+    queryFn: () => {
+      fetchMovies(query);
+    },
+  });
 
   const searchMovie = async (query: string) => {
     try {
