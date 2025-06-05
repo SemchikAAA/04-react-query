@@ -3,7 +3,7 @@ import fetchMovies from "../../services/movieService";
 import SearchBar from "../SearchBar/SearchBar";
 import toast, { Toaster } from "react-hot-toast";
 import MovieGrid from "../MovieGrid/MovieGrid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type Movie } from "../../types/movie";
 import MovieModal from "../MovieModal/MovieModal";
 import Loader from "../Loader/Loader";
@@ -35,11 +35,14 @@ export default function App() {
 
   const notify = () => toast.error("No movies found for your request.");
 
-  const handleSearch = (newQuery: string) => {
-    setQuery(newQuery);
-    if (data && data.results.length === 0 && query.length > 0) {
+  useEffect(() => {
+    if (isSuccess && data?.results.length === 0) {
       notify();
     }
+  }, [data, isSuccess]);
+
+  const handleSearch = (newQuery: string) => {
+    setQuery(newQuery);
 
     setCurrentPage(1);
   };
